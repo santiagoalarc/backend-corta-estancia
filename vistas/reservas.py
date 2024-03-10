@@ -1,5 +1,4 @@
 from flask import request
-from flask_cors import cross_origin
 from flask_jwt_extended import current_user, jwt_required
 from flask_restful import Resource
 from marshmallow import ValidationError
@@ -13,7 +12,6 @@ reserva_schema = ReservaSchema()
 class VistaReservas(Resource):
 
     @jwt_required()
-    @cross_origin()
     def post(self, id_propiedad):
         propiedad = Propiedad.query.filter(and_(Propiedad.id == id_propiedad,
                                                 Propiedad.id_administrador == current_user.id)).first()
@@ -36,7 +34,6 @@ class VistaReservas(Resource):
         return reserva_schema.dump(reserva), 201
     
     @jwt_required()
-    @cross_origin()
     def get(self, id_propiedad):
        resultado_buscar_propiedad = buscar_propiedad(id_propiedad, current_user.id)
        if resultado_buscar_propiedad.error:

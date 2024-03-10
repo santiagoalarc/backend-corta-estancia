@@ -1,4 +1,3 @@
-from flask_cors import cross_origin
 from sqlalchemy import exc
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token, current_user, jwt_required
@@ -12,7 +11,6 @@ propietario_schema = PropietarioSchema()
 
 class VistaSignInPropietarios(Resource):
 
-    @cross_origin()
     def post(self, id_usuario):
         nuevo_propietario = Propietario(id_usuario= id_usuario, 
                                         nombre= request.json["nombre"], 
@@ -30,7 +28,6 @@ class VistaSignInPropietarios(Resource):
         return {"mensaje": "usuario tipo propietario creado", "id": nuevo_propietario.id}, 201
         
     #PARA PRUEBAS
-    @cross_origin()
     def get(self):
         usuarios = Propietario.query.all()
         return propietario_schema.dump(usuarios, many= True)

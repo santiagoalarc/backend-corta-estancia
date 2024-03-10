@@ -1,5 +1,4 @@
 from flask import request
-from flask_cors import cross_origin
 from flask_jwt_extended import current_user, jwt_required
 from flask_restful import Resource
 from marshmallow import ValidationError
@@ -15,7 +14,6 @@ propiedad_schema = PropiedadSchema()
 class VistaPropiedades(Resource):
 
     @jwt_required()
-    @cross_origin()
     def post(self):
         try:
             propiedad = propiedad_schema.load(request.json, session=db.session)
@@ -33,7 +31,6 @@ class VistaPropiedades(Resource):
         return propiedad_schema.dump(propiedad), 201
 
     @jwt_required()
-    @cross_origin()
     def get(self):
         propiedades = Propiedad.query.filter(or_(Propiedad.id_usuario == current_user.id,
                                              Propiedad.id_administrador == current_user.id))

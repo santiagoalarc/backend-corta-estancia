@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, app
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
@@ -21,6 +21,7 @@ from vistas.tipo_usuario import VistaTipoUsuario
 
 def create_flask_app():
     app = Flask(__name__)
+    CORS(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///admon_reservas.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_SECRET_KEY'] = 'frase-secreta'
@@ -29,8 +30,7 @@ def create_flask_app():
     app_context = app.app_context()
     app_context.push()
     add_urls(app)
-    CORS(app, origins="*")
-    CORS(app, origins="*", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+
     jwt = JWTManager(app)
 
     @jwt.user_lookup_loader
@@ -62,6 +62,15 @@ def add_urls(app):
 app = create_flask_app()
 db.init_app(app)
 db.create_all()
+
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
 
 if __name__ == "__main__":
     app.run()

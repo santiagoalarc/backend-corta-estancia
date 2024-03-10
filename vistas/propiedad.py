@@ -1,5 +1,4 @@
 from flask import request
-from flask_cors import cross_origin
 from flask_jwt_extended import current_user, jwt_required
 from flask_restful import Resource
 from sqlalchemy import or_, and_
@@ -13,7 +12,6 @@ propiedad_schema = PropiedadSchema()
 class VistaPropiedad(Resource):
 
     @jwt_required()
-    @cross_origin()
     def put(self, id_propiedad):
         resultado_buscar_propiedad = buscar_propiedad(id_propiedad, current_user.id)
         if resultado_buscar_propiedad.error:
@@ -24,7 +22,6 @@ class VistaPropiedad(Resource):
         return propiedad_schema.dump(resultado_buscar_propiedad.propiedad)
 
     @jwt_required()
-    @cross_origin()
     def delete(self, id_propiedad):
         propiedad = Propiedad.query.filter(and_(Propiedad.id == id_propiedad,
                                                 Propiedad.id_administrador == current_user.id)).one_or_none()
@@ -39,7 +36,6 @@ class VistaPropiedad(Resource):
         return "", 204
 
     @jwt_required()
-    @cross_origin()
     def get(self, id_propiedad):
         propiedad_encontrada = buscar_propiedad(id_propiedad, current_user.id)
         if propiedad_encontrada.error:
