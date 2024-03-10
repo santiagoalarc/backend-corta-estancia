@@ -1,4 +1,5 @@
 from flask import request
+from flask_cors import cross_origin
 from flask_jwt_extended import current_user, jwt_required
 from flask_restful import Resource
 from marshmallow import ValidationError
@@ -12,6 +13,7 @@ movimiento_schema = MovimientoSchema()
 class VistaMovimientos(Resource):
 
     @jwt_required()
+    @cross_origin()
     def post(self, id_propiedad):
         propiedad = Propiedad.query.filter(and_(Propiedad.id == id_propiedad,
                                                 or_(Propiedad.id_administrador == current_user.id,
@@ -34,6 +36,7 @@ class VistaMovimientos(Resource):
         return movimiento_schema.dump(movimiento), 201
 
     @jwt_required()
+    @cross_origin()
     def get(self, id_propiedad):
         propiedad = Propiedad.query.filter(and_(Propiedad.id == id_propiedad,
                                                 or_(Propiedad.id_administrador == current_user.id,

@@ -1,3 +1,4 @@
+from flask_cors import cross_origin
 from sqlalchemy import exc
 from flask import jsonify, request
 from flask_jwt_extended import create_access_token, current_user, jwt_required
@@ -11,6 +12,7 @@ usuario_schema = UsuarioSchema()
 
 class VistaSignIn(Resource):
 
+    @cross_origin()
     def post(self):
         nuevo_usuario = Usuario(usuario=request.json["usuario"], 
                                 contrasena=request.json["contrasena"],
@@ -27,6 +29,7 @@ class VistaSignIn(Resource):
         return {"mensaje": "usuario creado", "token": token_de_acceso, "id": nuevo_usuario.id}, 201
 
     @jwt_required()
+    @cross_origin()
     def put(self, id_usuario):
         usuario_token = current_user
         if id_usuario != current_user.id:
@@ -46,6 +49,7 @@ class VistaSignIn(Resource):
     #    return "", 204
     
     #PARA PRUEBAS
+    @cross_origin()
     def get(self):
         usuarios = Usuario.query.all()
         return usuario_schema.dump(usuarios, many=True)

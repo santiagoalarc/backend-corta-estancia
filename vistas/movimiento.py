@@ -1,5 +1,6 @@
 import datetime
 from flask import request
+from flask_cors import cross_origin
 from flask_jwt_extended import current_user, jwt_required
 from flask_restful import Resource
 from sqlalchemy import and_, or_
@@ -13,6 +14,7 @@ movimiento_schema = MovimientoSchema()
 class VistaMovimiento(Resource):
 
     @jwt_required()
+    @cross_origin()
     def put(self, id_movimiento):
         movimiento = Movimiento.query.filter(Movimiento.id == id_movimiento).one_or_none()
 
@@ -38,6 +40,7 @@ class VistaMovimiento(Resource):
         return movimiento_schema.dump(movimiento)
 
     @jwt_required()
+    @cross_origin()
     def delete(self, id_movimiento):
         movimiento, propiedad = self.get_movimiento_y_propiedad(id_movimiento)
 
@@ -54,6 +57,7 @@ class VistaMovimiento(Resource):
         return "", 204
 
     @jwt_required()
+    @cross_origin()
     def get(self, id_movimiento):
         movimiento, propiedad = self.get_movimiento_y_propiedad(id_movimiento)
 

@@ -1,4 +1,5 @@
 from flask import request
+from flask_cors import cross_origin
 from flask_jwt_extended import current_user, jwt_required
 from flask_restful import Resource
 from modelos import Movimiento, Reserva, ReservaSchema, db
@@ -6,9 +7,11 @@ from vistas.utils import buscar_reserva
 
 reserva_schema = ReservaSchema()
 
+
 class VistaReserva(Resource):
 
     @jwt_required()
+    @cross_origin()
     def put(self, id_reserva):
         resultado_buscar_reserva = buscar_reserva(id_reserva, current_user.id)
         if resultado_buscar_reserva.error:
@@ -18,6 +21,7 @@ class VistaReserva(Resource):
         return reserva_schema.dump(resultado_buscar_reserva.reserva)
     
     @jwt_required()
+    @cross_origin()
     def delete(self, id_reserva):
         resultado_buscar_reserva = buscar_reserva(id_reserva, current_user.id)
         if resultado_buscar_reserva.error:
@@ -28,6 +32,7 @@ class VistaReserva(Resource):
         return "", 204
     
     @jwt_required()
+    @cross_origin()
     def get(self, id_reserva):
         resultado_buscar_reserva = buscar_reserva(id_reserva, current_user.id)
         if resultado_buscar_reserva.error:
